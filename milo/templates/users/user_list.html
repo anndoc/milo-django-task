@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load user_tags %}
+
+{% block content %}
+  <div class="mb-5 text-right">
+    <a href="{% url 'users:create' %}" class="btn btn-primary">{% trans 'create user'|title %}</a>
+  </div>
+
+  <table class="table table-striped text-center">
+    <thead>
+    <tr>
+      <th scope="col">{% trans 'username'|title %}</th>
+      <th scope="col">{% trans 'birthday'|title %}</th>
+      <th scope="col">{% trans 'eligible'|title %}</th>
+      <th scope="col">{% trans 'random number'|title %}</th>
+      <th scope="col">{% trans 'bizzFuzz'|title %}</th>
+      <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+      <tr>
+        <td><a href="{{ user.get_absolute_url }}">{{ user.username }}</a></td>
+        <td>{{ user.birthday }}</td>
+        <td>{% is_allowed user %}</td>
+        <td>{{ user.random_number }}</td>
+        <td>{% bizzfuzz user %}</td>
+        <td>
+          <form action="{% url 'users:delete' user.pk %}" method="post">
+            <button type="submit" class="btn btn-link" title="{% trans 'delete'|title %}"><i
+                    class="fa fa-trash-alt"></i></button>
+          </form>
+        </td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="6">{% trans 'There is no users yet' %}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  {% if page_obj.has_previous or page_obj.has_next %}
+    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+          <a href="?page=1">&laquo; first</a> |
+          <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+      <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a> |
+        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+      {% endif %}
+    </span>
+    </div>
+  {% endif %}
+{% endblock content %}

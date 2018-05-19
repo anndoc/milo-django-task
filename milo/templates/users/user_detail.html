@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load user_tags %}
+
+{% block content %}
+  <div class="row mb-5">
+    <a href="{% url 'users:list' %}" class="text-left col-sm mt-2">{% trans 'Back to users list' %}</a>
+    <form action="{% url 'users:delete' user.pk %}" method="post" class="text-right col-sm">
+      <button type="submit" class="btn btn-link" title="{% trans 'delete'|title %}"><i class="fa fa-trash-alt"></i></button>
+    </form>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item"><b>{% trans 'username'|title %}</b>: {{ object.username }}</li>
+    <li class="list-group-item"><b>{% trans 'birthday'|title %}</b>: {{ object.birthday }}</li>
+    <li class="list-group-item"><b>{% trans 'eligible'|title %}</b>: {% is_allowed user %}</li>
+    <li class="list-group-item"><b>{% trans 'random number'|title %}</b>: {{ object.random_number }}</li>
+    <li class="list-group-item"><b>{% trans 'bizzFuzz'|title %}</b>: {% bizzfuzz user %}</li>
+  </ul>
+  <div class="text-right mt-5">
+    <a href="{% url 'users:update' user.pk %}" class="btn btn-primary">{% trans 'update user'|title %}</a>
+  </div>
+{% endblock content %}
